@@ -4,6 +4,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
+import akka.stream.StreamTcpException
 import com.dimafeng.testcontainers.{ForAllTestContainer, GenericContainer}
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -46,4 +47,29 @@ class Socks5ClientTransportNoAuthSpec extends AsyncFlatSpec with Matchers with F
           .contains("https://github.com/"))
     }
   }
+
+  it should "connect to invalid proxy" in {
+    val proxyAddress = InetSocketAddress.createUnresolved(container.containerIpAddress + "1234567", container.mappedPort(1080))
+
+    for {
+      _ <- recoverToSucceededIf[StreamTcpException](Http().singleRequest(
+        HttpRequest(uri = "http://github.com/"),
+        settings = connectionSettings(proxyAddress)))
+    } yield {
+      succeed
+    }
+  }
+
+  it should "connect to an invalid address via proxy" in {
+    val proxyAddress = InetSocketAddress.createUnresolved(container.containerIpAddress, container.mappedPort(1080))
+
+    for {
+      _ <- recoverToSucceededIf[Socks5ConnectionException]( Http().singleRequest(
+        HttpRequest(uri = s"http://${container.containerIpAddress}:${container.mappedPort(1080)}/"),
+        settings = connectionSettings(proxyAddress)))
+    } yield {
+      succeed
+    }
+  }
+
 }

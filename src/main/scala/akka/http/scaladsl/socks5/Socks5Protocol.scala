@@ -4,6 +4,7 @@ import akka.util.ByteString
 
 import java.io.IOException
 import java.net.{Inet4Address, Inet6Address, InetAddress, InetSocketAddress}
+import java.nio.ByteBuffer
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -91,7 +92,7 @@ private[socks5] object Socks5Protocol {
         data(3) match {
           case 0x01 =>
             val ip = Array(data(4), data(5), data(6), data(7))
-            val port = data(8).toInt << 8 | data(9)
+            val port = (data(8) & 0xff) << 8 | data(9) & 0xff
             val socket =
               new InetSocketAddress(InetAddress.getByAddress(ip), port)
             Success(socket)
@@ -100,13 +101,13 @@ private[socks5] object Socks5Protocol {
             val start = 5
             val end = start + len
             val domain = data.slice(start, end).utf8String
-            val port = data(end).toInt << 8 | data(end + 1)
+            val port = (data(end) & 0xff) << 8 | (data(end + 1) & 0xff)
             val socket = new InetSocketAddress(domain, port)
             Success(socket)
           case 0x04 =>
             val ip = Array.ofDim[Byte](16)
             data.copyToArray(ip, 4, 4 + ip.length)
-            val port = data(4 + ip.length).toInt << 8 | data(4 + ip.length + 1)
+            val port = (data(4 + ip.length) & 0xff) << 8 | (data(4 + ip.length + 1) & 0xff)
             val socket =
               new InetSocketAddress(InetAddress.getByAddress(ip), port)
             Success(socket)
