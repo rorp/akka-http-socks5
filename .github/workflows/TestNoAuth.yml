@@ -19,4 +19,4 @@ jobs:
           java-version: '17'
           cache: 'sbt'
       - name: Run Tests
-        run: sbt "testOnly *Socks5ClientTransportSpec"
+        run: sbt "testOnly *Socks5ClientTransportNoAuthSpec"
