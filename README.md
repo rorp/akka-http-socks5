@@ -15,9 +15,9 @@ import java.net.InetSocketAddress
 
 implicit val system = ActorSystem()
 
-val httpsProxyTransport = Socks5ClientTransport.socks5Proxy(InetSocketAddress.createUnresolved("localhost", 1080))
+val socks5ProxyTransport = Socks5ClientTransport.socks5Proxy(InetSocketAddress.createUnresolved("localhost", 1080))
 
-val settings = ConnectionPoolSettings(system).withTransport(httpsProxyTransport)
+val settings = ConnectionPoolSettings(system).withTransport(socks5ProxyTransport)
 
 Http().singleRequest(HttpRequest(uri = "https://github.com"), settings = settings)
 ```
@@ -40,9 +40,9 @@ val proxyAddress = InetSocketAddress.createUnresolved("localhost", 1080)
 
 val proxyAuth = BasicHttpCredentials("proxy-user", "secret-proxy-pass")
 
-val httpsProxyTransport = Socks5ClientTransport.socks5Proxy(proxyAddress, proxyAuth)
+val socks5ProxyTransport = Socks5ClientTransport.socks5Proxy(proxyAddress, proxyAuth)
 
-val settings = ConnectionPoolSettings(system).withTransport(httpsProxyTransport)
+val settings = ConnectionPoolSettings(system).withTransport(socks5ProxyTransport)
 
 Http().singleRequest(HttpRequest(uri = "https://github.com"), settings = settings)
 ```
