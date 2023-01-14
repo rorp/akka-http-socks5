@@ -3,7 +3,6 @@ package akka.http.scaladsl.socks5
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
-import akka.http.scaladsl.model.headers.BasicHttpCredentials
 import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
 import akka.stream.StreamTcpException
 import com.dimafeng.testcontainers.{ForAllTestContainer, GenericContainer}
@@ -13,29 +12,19 @@ import org.testcontainers.containers.wait.strategy.Wait
 
 import java.net.InetSocketAddress
 
-class Socks5ClientTransportSpec extends AsyncFlatSpec with Matchers with ForAllTestContainer {
+class Socks5ClientTransportNoAuthSpec extends AsyncFlatSpec with Matchers with ForAllTestContainer {
 
   override val container =
     GenericContainer(
       "xkuma/socks5:latest",
       exposedPorts = Seq(1080),
-      env = Map(
-        "PROXY_USER" -> "foo",
-        "PROXY_PASSWORD" -> "bar"),
       waitStrategy = Wait.forListeningPort())
 
   implicit val system = ActorSystem()
 
   implicit val ec = system.dispatcher
 
-  private def connectionSettings(proxyAddress: InetSocketAddress, username: String = "foo", password: String = "bar") = {
-    val credentials = BasicHttpCredentials(username, password)
-    val socks5ClientTransport = Socks5ClientTransport.socks5Proxy(proxyAddress, credentials)
-    val clientConnectionSettings = ClientConnectionSettings(system).withTransport(socks5ClientTransport)
-    ConnectionPoolSettings(system).withConnectionSettings(clientConnectionSettings)
-  }
-
-  private def connectionSettingsNoAuth(proxyAddress: InetSocketAddress) = {
+  private def connectionSettings(proxyAddress: InetSocketAddress) = {
     val socks5ClientTransport = Socks5ClientTransport.socks5Proxy(proxyAddress)
     val clientConnectionSettings = ClientConnectionSettings(system).withTransport(socks5ClientTransport)
     ConnectionPoolSettings(system).withConnectionSettings(clientConnectionSettings)
@@ -56,30 +45,6 @@ class Socks5ClientTransportSpec extends AsyncFlatSpec with Matchers with ForAllT
           .find(_.lowercaseName() == "location")
           .map(_.value())
           .contains("https://github.com/"))
-    }
-  }
-
-  it should "fail to connect with invalid credentials " in {
-    val proxyAddress = InetSocketAddress.createUnresolved(container.containerIpAddress, container.mappedPort(1080))
-
-    for {
-      _ <- recoverToSucceededIf[Socks5ConnectionException]( Http().singleRequest(
-        HttpRequest(uri = "http://github.com/"),
-        settings = connectionSettings(proxyAddress, username = "bar", password =  "foo")))
-    } yield {
-      succeed
-    }
-  }
-
-  it should "fail to connect with no credentials " in {
-    val proxyAddress = InetSocketAddress.createUnresolved(container.containerIpAddress, container.mappedPort(1080))
-
-    for {
-      _ <- recoverToSucceededIf[Socks5ConnectionException](Http().singleRequest(
-        HttpRequest(uri = "http://github.com/"),
-        settings = connectionSettingsNoAuth(proxyAddress)))
-    } yield {
-      succeed
     }
   }
 
