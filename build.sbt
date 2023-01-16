@@ -2,8 +2,8 @@ import Dependencies._
 
 ThisBuild / scalaVersion     := "2.13.8"
 ThisBuild / version          := "10.2.7-SNAPSHOT"
-ThisBuild / organization     := "akka-http-socks5"
-ThisBuild / organizationName := "akka-http-socks5"
+ThisBuild / organization     := "io.github.rorp"
+ThisBuild / organizationName := "io.github.rorp"
 
 lazy val root = (project in file("."))
   .settings(
