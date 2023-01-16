@@ -1,6 +1,6 @@
 # akka-http-socks5
 
-An Akka HTTP transport that connects to target server via a SOCKS5 proxy.
+An Akka HTTP [client transport](https://doc.akka.io/docs/akka-http/current/client-side/client-transport.html) that connects to target server via a SOCKS5 proxy.
 
 ### Use SOCKS5 proxy with Http().singleRequest
 
