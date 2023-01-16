@@ -1,4 +1,4 @@
-package akka.http.scaladsl.socks5
+package io.github.rorp.akka.http.scaladsl.socks5
 
 import akka.util.ByteString
 

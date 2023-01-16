@@ -1,4 +1,4 @@
-package akka.http.scaladsl.socks5
+package io.github.rorp.akka.http.scaladsl.socks5
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http

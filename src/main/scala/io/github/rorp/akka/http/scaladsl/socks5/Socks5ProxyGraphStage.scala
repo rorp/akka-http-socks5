@@ -1,12 +1,12 @@
-package akka.http.scaladsl.socks5
+package io.github.rorp.akka.http.scaladsl.socks5
 
 import akka.NotUsed
 import akka.http.scaladsl.model.headers.BasicHttpCredentials
-import akka.http.scaladsl.socks5.Socks5Protocol._
 import akka.stream.scaladsl.BidiFlow
 import akka.stream.stage.{GraphStage, GraphStageLogic, InHandler, StageLogging}
 import akka.stream.{Attributes, BidiShape, Inlet, Outlet}
 import akka.util.ByteString
+import io.github.rorp.akka.http.scaladsl.socks5.Socks5Protocol._
 
 import java.net.InetSocketAddress
 import scala.util.{Failure, Success}
