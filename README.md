@@ -8,8 +8,8 @@ An Akka HTTP [client transport](https://doc.akka.io/docs/akka-http/current/clien
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
-import akka.http.scaladsl.socks5.Socks5ClientTransport
 import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
+import io.github.rorp.akka.http.scaladsl.socks5.Socks5ClientTransport
 
 import java.net.InetSocketAddress
 
@@ -29,8 +29,8 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.headers.BasicHttpCredentials
 import akka.http.scaladsl.model.HttpRequest
-import akka.http.scaladsl.socks5.Socks5ClientTransport
 import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
+import io.github.rorp.akka.http.scaladsl.socks5.Socks5ClientTransport
 
 import java.net.InetSocketAddress
 
